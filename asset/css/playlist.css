@@ -1,0 +1,132 @@
+#leftBar{
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 306px;
+  background-color: #740000;
+  margin-top: 44px;
+  z-index: 999;
+}
+
+#player {
+  position: relative;
+  overflow: visible !important;
+  display: inline-block;
+  width: auto;
+  border: 2px solid #740000;
+  box-shadow: 0px 0px 35px transparent;
+  border-right-width: 4px;
+  z-index: 999;
+}
+  #player.YTmovePlayer {
+    position: fixed !important;
+    top: 150px;
+    left: 400px;
+    height: auto !important;
+    border: 7px solid #A60000 !important;
+    border-radius: 6px;
+    box-shadow: 0px 0px 35px black;
+  }
+  #player a.YTlightSwitch {
+    position: absolute;
+    top: -26px;
+    right: 3px;
+    background-color: #740000;
+    padding: 2px 10px 2px 10px;
+    border-radius: 6px 6px 0 0;
+    color: white;
+    text-decoration: none;
+  }
+  #player a.YTpop {
+    position: absolute;
+    top: -26px;
+    right: 60px;
+    background-color: #740000;
+    padding: 2px 10px 2px 10px;
+    border-radius: 6px 6px 0 0;
+    color: white;
+    text-decoration: none;
+  }
+  #player a.YTpoppedColor {
+    background-color: #A60000;
+  }
+  #player #YTplayer101 {
+    margin-bottom: -5px;
+    width: auto;
+    height: 200px;
+  }
+  #player #YTplayer101.YTiframeEnlarge {
+    width: 700px !important;
+    height: 400px !important;
+  }
+
+#playlist {
+  position: relative;
+  display: inline-block;
+  height: 100%;
+  overflow-y: scroll; 
+  overflow-x: hidden; 
+  border: 2px solid #740000;
+  border-right-width: 6px;
+  background-color: #191919;
+  border-radius: 0;
+  z-index: 999;
+  box-shadow: 0px 0px 35px transparent;
+}
+  #playlist a {
+    position: ;
+    display: block;
+    color: red;
+    text-decoration: none;
+  }
+    #playlist a.More {
+      text-align: center;
+      background-color: #A60000;
+      border-top: 2px solid #AE1919;
+      color: white;
+    }
+      #playlist a div.thumbnailBlock {
+        display: block;
+        padding: 6px;
+        margin: 0 0 5px 0;
+        border: 2px solid transparent;
+      }
+      #playlist a div.thumbnailBlock:hover {
+        background-color: #740000;
+        color: #e5e5e5;
+        border: 2px solid #740000;
+      }
+        #playlist a div.thumbnailBlock.selected {
+          background-color: #A60000;
+          color: #cccccc;
+          border: 2px solid #191919;
+          
+        }
+        #playlist a div.thumbnailBlock img {
+          float: left;
+          margin: 0 5px 0 10px;
+          width: 120px;
+          height: 90px;
+          border: 2px solid #b2b2b2;
+        }
+        #playlist a div.thumbnailBlock p.title {
+          margin: 0;
+        }
+        #playlist a div.thumbnailBlock p.smallDetails {
+          margin: 0;
+          margin-top: 5px;
+          font-size: 7pt;
+        }
+
+.playerOverlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 0.8;
+  filter:alpha(opacity=80); /* For IE8 and earlier */
+  z-index: 500;
+}
