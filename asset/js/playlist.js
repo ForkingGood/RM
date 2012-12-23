@@ -38,7 +38,9 @@
       //togglePlayer();
 
       // toogle leftBar to be hidden
-      toggleLeftBar(false);
+      toggleLeftBar(false, function() { 
+        $('#leftBar').css('display', 'block');
+      });
 
       // Tracking first entry as current, and show as selected
       var current = $('#playlist > a.vidSelection').first().attr('name');
@@ -265,13 +267,13 @@
 
     /*  toggles options tab visible/invisible, according to parameter (or current state)
     ------------------------------------------------------------------------------------------*/
-    function toggleOptionsVisible(state) {
+    function toggleOptionsVisible(state, callback) {
       var toVisible = state != null ? state : $('div.options').css('display') == 'none';
       if (toVisible){
-        $('div.options').stop().fadeIn();
+        $('div.options').stop().fadeIn(callback);
       }
       else {
-        $('div.options').stop().fadeOut();
+        $('div.options').stop().fadeOut(callback);
       }
     }
 
@@ -282,15 +284,15 @@
 
     /*  toggles leftBar panel visible/invisible, according to parameter (or current state)
     ------------------------------------------------------------------------------------------*/
-    function toggleLeftBar(state) {
+    function toggleLeftBar(state, callback) {
       var openLeftBar = state != null ? state : $('#leftBar').position().left != 0;
       if (openLeftBar) {
-        $('#leftBar').animate({'left': '0px'}, 'slow');
+        $('#leftBar').animate({'left': '0px'}, 'slow', callback);
         $('#playlist .close').text('<<');
         toggleOptionsVisible(true);
       }
       else {
-        $('#leftBar').animate({'left': '-' + $('#leftBar').outerWidth() + 'px'}, 'slow');
+        $('#leftBar').animate({'left': '-' + $('#leftBar').outerWidth() + 'px'}, 'slow', callback);
         $('#playlist .close').text('YT');
         //  If player is not enlarged (in left bar), pause it, since it's going to be hidden anyways
         if (youtubeIframeLoaded && !playerIsEnlarged()) {

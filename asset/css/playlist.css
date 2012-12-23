@@ -6,6 +6,7 @@
   background-color: #740000;
   margin-top: 44px;
   z-index: 999;
+  display: none;
 }
 
 #player {
@@ -144,6 +145,7 @@
     right: 0;
     z-index: -1;
     padding: 10px;
+    display: none;
   }
     #playlist div.options a.toggle {
       position: absolute;
