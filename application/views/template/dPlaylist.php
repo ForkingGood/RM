@@ -4,8 +4,8 @@
 	<div id="playlist">
 		<a href="#" class="close"><<</a>
 		<div class="options">
-			<input type="text" />
-			<input type="button" value="s" />
+			<input class="searchText" type="text" />
+			<input class="search" type="button" value="s" />
 
 			<a href="#" class="toggle">Options</a>
 		</div>

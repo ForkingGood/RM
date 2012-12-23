@@ -4,7 +4,10 @@
 ==========================================================================================================================================*/
 
     var player;
-
+    //var playlist = [];
+    var filters;
+    var startVidOnLoad = false;
+    var youtubeIframeLoaded = false;
 
 /*==========================================================================================================================================
   INIT
@@ -31,12 +34,15 @@
       //  Set classes and initial function calling
       ////////////////////////////////////////////////////////////////////////////////////////////
 
-      // Pop the player to be enlarged
-      movePlayer();
+      // toggle the player to be enlarged
+      //togglePlayer();
+
+      // toogle leftBar to be hidden
+      toggleLeftBar(false);
 
       // Tracking first entry as current, and show as selected
-      var current = $('#playlist > a').first().attr('name');
-      $('#playlist > a > div').first().addClass('selected');
+      var current = $('#playlist > a.vidSelection').first().attr('name');
+      $('#playlist > a.vidSelection > div').first().addClass('selected');
 
 
       ////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,20 +58,13 @@
       // Listen for light switch button clicking (sets overlay)
       $('.YTlightSwitch').click(function(e) {
         e.preventDefault();
-        if ($('body').has('.playerOverlay').size() != 0){
-          $('.playerOverlay').stop().fadeOut(function() {
-            $('.playerOverlay').remove();
-          });
-        }
-        else {
-          setOverlay();
-        }
+        toggleOverlay();
       });
 
       // Listen for Popping
       $('.YTpop').click(function(e) {
         e.preventDefault();
-        movePlayer();
+        togglePlayer();
       });
 
       // Listen for location of playlist scroll bar (add more vid when scrolled to a certain point)
@@ -74,7 +73,7 @@
 
         //  If scrolled more than 98%, do this
         if (maxHeight * 0.98 < $(this).scrollTop()) {
-          appendVids();
+          appendVids(filters);
         }
       });
 
@@ -92,17 +91,37 @@
 
       // Listen for the toggle of closing or openning playlist
       $('#playlist a.close').click(function() {
-        if ($('#leftBar').position().left == 0) {
-          $('#leftBar').animate({'left': '-' + $('#leftBar').outerWidth() + 'px'}, 'slow');
-          $(this).text('>>');
+        toggleLeftBar();
+      });
+
+      // Listen for Search
+      $('.options .search').click(function(e) {
+        e.preventDefault();
+
+        var searchString = $('.options .searchText').val();
+        //  Split string by spaces
+        var wordList = searchString.split(" ");
+        filters = "";
+        for (word in wordList) {
+          filters += wordList[word] + "/";
         }
-        else {
-          $('#leftBar').animate({'left': '0px'}, 'slow');
-          $(this).text('<<');
+        resetPlaylist();
+      });
+
+      $(".options .searchText").keyup(function(event){
+        if(event.keyCode == 13){
+          var searchString = $('.options .searchText').val();
+          //  Split string by spaces
+          var wordList = searchString.split(" ");
+          filters = "";
+          for (word in wordList) {
+            filters += wordList[word] + "/";
+          }
+          resetPlaylist();
         }
       });
 
-      //  Listen for browser resizing
+      // Listen for browser resizing
       $(window).resize(winResize);
     });
 
@@ -114,11 +133,14 @@
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////
-    //  Listens for when the Youtube library is properly loaded
+    //  VIDEO STATES
     ////////////////////////////////////////////////////////////////////////////////////////////
+
+    /*  Listens for when the Youtube library is properly loaded
+    ------------------------------------------------------------------------------------------*/
     function onYouTubeIframeAPIReady() {
-      appendVids(function() {
-        $('#playlist > a > div').first().addClass('selected');
+      appendVids(filters, function() {
+        $('#playlist > a.vidSelection > div').first().addClass('selected');
         player = new YT.Player('YTplayer101', {
           height: '315',
           width: '560',
@@ -128,92 +150,198 @@
             'onStateChange': onPlayerStateChange
           }
         });
-        setOverlay();
       });
+      youtubeIframeLoaded = true;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    //  Listens for when the player is ready
-    ////////////////////////////////////////////////////////////////////////////////////////////
+    /*  Listens for when the player is ready
+    ------------------------------------------------------------------------------------------*/
     function onPlayerReady(event) {
-      event.target.playVideo();
+      if (startVidOnLoad) {
+        event.target.playVideo();
+      }
+      //  Since only applies first time, set the rest to be true
+      startVidOnLoad = true;
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////// 
-    //  Listens for when the state of the player has changed : 
-    //  ENDED, PLAYING, PAUSED, BUFFERING, CUED
-    ////////////////////////////////////////////////////////////////////////////////////////////
+    /*  Listens for when the state of the player has changed : 
+    /*  ENDED, PLAYING, PAUSED, BUFFERING, CUED
+    ------------------------------------------------------------------------------------------*/
     function onPlayerStateChange(event) {
       if (event.data == YT.PlayerState.ENDED) {
         nextVideo($('a[name="' + current + '"]').next().attr('name'));
       }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    //  Stops the current video
-    ////////////////////////////////////////////////////////////////////////////////////////////
+    /*  Stops the current video
+    ------------------------------------------------------------------------------------------*/
     function stopVideo() {
       player.stopVideo();
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////// 
-    //  Switch the player to load the video with the Vid id passed in the parameter, 
-    //  while setting the selected vid bar (in playlist) with the code with class 'selected',
-    //  as well as scrolling selected vid bar (in playlist) to top
-    ////////////////////////////////////////////////////////////////////////////////////////////
+    /*  Pause the current video
+    ------------------------------------------------------------------------------------------*/
+    function pauseVideo() {
+      player.pauseVideo();
+    }
+
+    /*  Switch the player to load the video with the Vid id passed in the parameter, 
+    /*  while setting the selected vid bar (in playlist) with the code with class 'selected',
+    /*  as well as scrolling selected vid bar (in playlist) to top
+    ------------------------------------------------------------------------------------------*/
     function nextVideo(code) {
       //  Set class 'selected'
-        $('#playlist > a > div').removeClass('selected');
-        $('a[name="' + code + '"]').children('div').addClass('selected');
+      $('#playlist > a.vidSelection > div').removeClass('selected');
+      $('a[name="' + code + '"]').children('div').addClass('selected');
 
-        //  Set new current and switch to next vid
-        current = $('a[name="' + code + '"]').attr('name');
-        player.loadVideoById(current, 0, "large");
+      //  Set new current and switch to next vid
+      current = $('a[name="' + code + '"]').attr('name');
+      player.loadVideoById(current, 0, "large");
 
-        //  Scroll to proper location in playlist
-        $('#playlist').animate({ scrollTop: ($('#playlist').scrollTop() + $('a[name="' + current + '"]').offset().top - $('#playlist').offset().top) }, 1000);
+      //  Scroll to proper location in playlist
+      $('#playlist').animate({ scrollTop: ($('#playlist').scrollTop() + $('a[name="' + current + '"]').offset().top - $('#playlist').offset().top) }, 1000);
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////// 
+    //  PLAYER ACTIONS
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /*  Toggle video player from in left bar (#leftBar) to a more enlarged version, or reverse
+    ------------------------------------------------------------------------------------------*/
+    function togglePlayer(state) {
+      //alert($('.leftBar:has(#player').size());
+      var openPlayer = state != null ? state : !$('#player').hasClass('YTmovePlayer');
+
+      if (openPlayer) {
+        $('#player').stop().slideUp(500, function() {
+          $('#player').addClass('YTmovePlayer');
+          $('#YTplayer101').addClass('YTiframeEnlarge');
+          $('#player > .YTlightSwitch').addClass('YTpoppedColor');
+          $('#player > .YTpop').addClass('YTpoppedColor');
+          $('#player').fadeIn(1000);
+        });
+      }
+      else {
+        $('#player').stop().fadeOut(1000, function() {
+          $('#player').removeClass('YTmovePlayer');
+          $('#YTplayer101').removeClass('YTiframeEnlarge');
+          $('#player > .YTlightSwitch').removeClass('YTpoppedColor');
+          $('#player > .YTpop').removeClass('YTpoppedColor');
+          $('#player').slideDown(500);
+        });
+      }
+    }
+
+    /*  return state of player location
+    ------------------------------------------------------------------------------------------*/
+    function playerIsEnlarged() {
+      return $('#player').hasClass('YTmovePlayer');
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////// 
+    //  OPTIONS ACTIONS
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    /*  toggle options tab open/close, according to parameter (or current state)
+    ------------------------------------------------------------------------------------------*/
+    function toggleOptions(state, callback) {
+      var openOptions = state != null ? state : $('div.options').css('right').replace('px', '') == 0;
+      if (openOptions) {
+        var right = -1 * (parseInt($('div.options').css('width').replace('px', '')) + 20);
+        $('div.options').animate({"right": right + "px"}, "slow", callback);
+      }
+      else {
+        $('div.options').animate({"right":"0px"}, "slow", callback);
+      }
+    }
+
+    /*  return if options tab is open
+    ------------------------------------------------------------------------------------------*/
+    function optionsIsOpen() {
+      return $('div.options').css('right').replace('px', '') != 0;
+    }
+
+    /*  toggles options tab visible/invisible, according to parameter (or current state)
+    ------------------------------------------------------------------------------------------*/
+    function toggleOptionsVisible(state) {
+      var toVisible = state != null ? state : $('div.options').css('display') == 'none';
+      if (toVisible){
+        $('div.options').stop().fadeIn();
+      }
+      else {
+        $('div.options').stop().fadeOut();
+      }
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////// 
+    //  OPTIONS ACTIONS
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    /*  toggles leftBar panel visible/invisible, according to parameter (or current state)
+    ------------------------------------------------------------------------------------------*/
+    function toggleLeftBar(state) {
+      var openLeftBar = state != null ? state : $('#leftBar').position().left != 0;
+      if (openLeftBar) {
+        $('#leftBar').animate({'left': '0px'}, 'slow');
+        $('#playlist .close').text('<<');
+        toggleOptionsVisible(true);
+      }
+      else {
+        $('#leftBar').animate({'left': '-' + $('#leftBar').outerWidth() + 'px'}, 'slow');
+        $('#playlist .close').text('YT');
+        //  If player is not enlarged (in left bar), pause it, since it's going to be hidden anyways
+        if (youtubeIframeLoaded && !playerIsEnlarged()) {
+          pauseVideo();
+        }
+        toggleOptions(false, function() { toggleOptionsVisible(false); });
+      }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////
-    //  Load overlay to fade in, covering everything other than things in #leftBar,
-    //  as well as setting a listener for clicking the overlay (which removes it)
+    //  PLAYLIST SETTINGS
     ////////////////////////////////////////////////////////////////////////////////////////////
-    function setOverlay() {
-      //  add overlay element
-      $('body').append('<div class="playerOverlay"></div>');
-      //  fade it in
-      $('.playerOverlay').stop().fadeIn(1000);
-      //  set listener for clicking overlay
-      $('.playerOverlay').click(function() {
-        //  fade out overlay then remove element
-        $('.playerOverlay').stop().fadeOut(function() {
-          $('.playerOverlay').remove();
-        });
+
+    /*  Resets the playlist with the preferred filter
+    ------------------------------------------------------------------------------------------*/
+    function resetPlaylist(filter) {
+      $('.vidSelection').remove();
+      appendVids(filter, function() {
+        nextVideo($('#playlist > a.vidSelection').eq(0).attr('name'));
       });
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    //  load list of entries from youtube API (json) to playlist
-    //  starting from the last index in playlist (or start from 1 if playlist is empty)
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    function appendVids(callback){
+    /*  load list of entries from youtube API (json) to playlist
+    /*  starting from the last index in playlist (or start from 1 if playlist is empty)
+    ------------------------------------------------------------------------------------------*/
+    function appendVids(filter, callback){
       var scrolledPos = $(this).scrollTop();
-      var url = 'http://gdata.youtube.com/feeds/api/users/redmercy/uploads?alt=json&v=2';
-      var lastIndex = parseInt($('#playlist > a.vidSelection').eq($('#playlist > a').length - 1).attr('key'));
-      var maxResults = 10;
-      var init = false;
-      if (isNaN(lastIndex)) {
-        lastIndex = 0;
-        init = true;
+      var url = 'http://gdata.youtube.com/feeds/api/users/redmercy/uploads';
+      //  If filter is applied, add filter
+      if (filter != null) {
+        filters = filter;
       }
-
-      $.getJSON(url + "&start-index=" + (++lastIndex) + "&max-results=" + maxResults, function(data) {
+      if (filters != null && filters != '') {
+        url += '/-/' + filters;
+      }
+      //  Set return type to JSON and version 2
+      url += '?alt=json&v=2';
+      //  Set starting index
+      var lastIndex = parseInt($('#playlist > a.vidSelection').eq($('#playlist > a').length - 1).attr('key'));
+      url += '&start-index=' + (isNaN(lastIndex) ? 1 : lastIndex);
+      //  Set max amount of results
+      var maxResults = 10;
+      url += '&max-results=' + maxResults;
+    
+      //  Call URL and get returned JSON content into data
+      $.getJSON(url, function(data) {
         var json = data;
-        var playlist = [];
 
         //  Add list of videos to playlist[] and add to actual playlist as well
         $.each(json.feed.entry, function(key, val) {
-          playlist.push(val.media$group.yt$videoid.$t);
+          //playlist.push(val.media$group.yt$videoid.$t);
           $('#playlist > a:last').before(
             '<a href="#" class="vidSelection" name="' + val.media$group.yt$videoid.$t + '" tooltip="hi" key="' + lastIndex++ + '">' + 
               '<div class="thumbnailBlock">' + 
@@ -225,39 +353,44 @@
             '</a>'
           );
         });
-        $('#playlist > a').click(function(e) {
+        $('#playlist > a.vidSelection').click(function(e) {
           e.preventDefault();
           nextVideo($(this).attr('name'));
         });
         callback();
       });
       $(this).scrollTop(scrolledPos);
+      winResize();
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////// 
-    //  Toggle video player from in left bar (#leftBar) to a more enlarged version, or reverse
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    function movePlayer() {
-      //alert($('.leftBar:has(#player').size());
-        if (!$('#player').hasClass('YTmovePlayer')) {
-          $('#player').stop().slideUp(500, function() {
-            $('#player').addClass('YTmovePlayer');
-            $('#YTplayer101').addClass('YTiframeEnlarge');
-            $('#player > .YTlightSwitch').addClass('YTpoppedColor');
-            $('#player > .YTpop').addClass('YTpoppedColor');
-            $('#player').fadeIn(1000);
+    /*  Load overlay to fade in, covering everything other than things in #leftBar,
+    /*  as well as setting a listener for clicking the overlay (which removes it)
+    ------------------------------------------------------------------------------------------*/
+    function toggleOverlay(state) {
+      var setOverlay = state != null ? state : $('body').has('.playerOverlay').size() == 0;
+
+      if (setOverlay) {
+        //  add overlay element
+        $('body').append('<div class="playerOverlay"></div>');
+        //  fade it in
+        $('.playerOverlay').stop().fadeIn(1000);
+        //  set listener for clicking overlay
+        $('.playerOverlay').click(function() {
+          //  fade out overlay then remove element
+          $('.playerOverlay').stop().fadeOut(function() {
+            $('.playerOverlay').remove();
           });
-        }
-        else {
-          $('#player').stop().fadeOut(1000, function() {
-            $('#player').removeClass('YTmovePlayer');
-            $('#YTplayer101').removeClass('YTiframeEnlarge');
-            $('#player > .YTlightSwitch').removeClass('YTpoppedColor');
-            $('#player > .YTpop').removeClass('YTpoppedColor');
-            $('#player').slideDown(500);
-          });
-        }
+        });
+      }
+      else {
+        //  fade overlay
+        $('.playerOverlay').stop().fadeOut(function() {
+          //  remove physical element
+          $('.playerOverlay').remove();
+        });
+      }
     }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     //  resets the #leftBar height to fit perfectly

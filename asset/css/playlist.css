@@ -10,7 +10,6 @@
 
 #player {
   position: relative;
-  overflow: visible !important;
   display: inline-block;
   width: auto;
   border: 2px solid #740000;
