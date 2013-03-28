@@ -92,7 +92,8 @@
       });
 
       // Listen for the toggle of closing or openning playlist
-      $('#playlist a.close').click(function() {
+      $('#playlist a.close').click(function(e) {
+        e.preventDefault();
         toggleLeftBar();
       });
 
