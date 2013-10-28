@@ -4,13 +4,16 @@
 ==========================================================================================================================================*/
 
     var player;
-    var filters = $.cookie('filters') != null ? $.cookie('filters') : '';
+    var filters = '';
     var startVidOnLoad = false;
     var youtubeIframeLoaded = false;
-    var playlistFilter = $.cookie('playlistFilter') != null ? $.cookie('playlistFilter') : '';
+    var playlistFilter = '';
     var startIndex = 1;
     var resultsPerLoad = 10;
-    var current = '';
+
+    var InitEnlargeVid = false;
+    var InitOpenFilter = false;
+    var InitShowLeftBar = false;
 
 /*==========================================================================================================================================
   INIT
@@ -31,9 +34,6 @@
       $('#player').append('<div id="YTplayer101"></div>');
       $('#player').append('<a class="YTlightSwitch" href="#">Light</a>');
       $('#player').append('<a class="YTpop" href="#">Pop</a>');
-      $('#player').append('<a class="YTdrag" href="#">Drag</a>');
-      $('#player').css('cursor', 'move').draggable({ constainment: '#playlist', scroll: false });
-      $('#YTplayer101').resizable({ animate: true });
       $('#playlist').append('<a class="More" href="#">View More</a>');
 
 
@@ -44,23 +44,20 @@
       //  Set classes and initial function calling
       ////////////////////////////////////////////////////////////////////////////////////////////
 
-      // Set settings according to cookies (or default)
-      // if ($.cookie('leftBarIsOpened') != null) {
-      //   toggleLeftBar($.cookie('leftBarIsOpened') == 'true', 0);
-      //   toggleOptions($.cookie('optionsIsOpened') == 'true', 0);
-      //   togglePlayer($.cookie('playerIsEnlarged') == 'true', 0);
-        //  onYouTubeIframeAPIReady:
-        //      set video code
-        //  appendVid:
-        //      populate previous amount of videos
-        //  onPlayerReady:
-        //      set: video, seekTo
 
-      // }
+      // toggle the player to be enlarged
+      togglePlayer(InitEnlargeVid);
 
+      // toogle leftBar to be hidden
+      toggleLeftBar(InitShowLeftBar, null, function() { 
+        $('#leftBar').css('display', 'block');
+      });
+
+      // toggle filter to be open
+      toggleOptions(InitOpenFilter);
 
       // Tracking first entry as current, and show as selected
-      current = $('#playlist > a.vidSelection').first().attr('name');
+      var current = $('#playlist > a.vidSelection').first().attr('name');
       $('#playlist > a.vidSelection > div').first().addClass('selected');
 
 
@@ -68,11 +65,6 @@
       //  Set listeners
       ////////////////////////////////////////////////////////////////////////////////////////////
 
-      // Listen for playlist vid clicking
-      $('#playlist > a.vidSelection').click(function(e) {
-        e.preventDefault();
-        nextVideo();
-      });
 
       // Listen for light switch button clicking (sets overlay)
       $('.YTlightSwitch').click(function(e) {
@@ -92,7 +84,7 @@
 
         //  If scrolled more than 98%, do this
         if (maxHeight * 0.98 < $(this).scrollTop()) {
-          appendVids();
+          appendVids(filters);
         }
       });
 
@@ -111,49 +103,17 @@
       // Listen for Search
       $('.options .search').click(function(e) {
         e.preventDefault();
-        setFilterTxt($('.options .searchText').val());
-        resetPlaylist();
-      // alert(
-      //   "playerIsEnlarged : '" + $.cookie('playerIsEnlarged') + "'\n" +
-      //   "playerTime       : '" + $.cookie('playerTime')       + "'\n" +
-      //   "leftBarIsOpened  : '" + $.cookie('leftBarIsOpened')  + "'\n" +
-      //   "optionsIsOpened  : '" + $.cookie('optionsIsOpened')  + "'\n" +
-      //   "playlistFilter   : '" + $.cookie('playlistFilter')   + "'\n" +
-      //   "filters          : '" + $.cookie('filters')          + "'\n" +
-      //   "selectedCode     : '" + $.cookie('selectedCode')     + "'\n" +
-      //   "playerState      : '" + $.cookie('playerState')      + "'\n" +
-      //   "startIndex       : '" + $.cookie('startIndex')       + "'\n"
-      //   );
+        optionsFilterList($('.options .searchText').val());
       });
 
       $(".options .searchText").keyup(function(event){
         if(event.keyCode == 13){
-          setFilterTxt($('.options .searchText').val());
-          resetPlaylist();
+          optionsFilterList($('.options .searchText').val());
         }
       });
 
       // Listen for browser resizing
       $(window).resize(winResize);
-
-      // store info when user navigates away from page for page layout resume
-      // alert(
-      //   "playerIsEnlarged : '" + $.cookie('playerIsEnlarged') + "'\n" +
-      //   "playerTime       : '" + $.cookie('playerTime')       + "'\n" +
-      //   "leftBarIsOpened  : '" + $.cookie('leftBarIsOpened')  + "'\n" +
-      //   "optionsIsOpened  : '" + $.cookie('optionsIsOpened')  + "'\n" +
-      //   "playlistFilter   : '" + $.cookie('playlistFilter')   + "'\n" +
-      //   "filters          : '" + $.cookie('filters')          + "'\n" +
-      //   "selectedCode     : '" + $.cookie('selectedCode')     + "'\n" +
-      //   "playerState      : '" + $.cookie('playerState')      + "'\n" +
-      //   "startIndex       : '" + $.cookie('startIndex')       + "'\n"
-      //   );
-      $( window ).on('unload', setForReturn); 
-      $( window ).click(function() {
-        if ($(event.target).parents().index($('#leftBar')) == -1 && $(event.target).parents().index($('#showIntro')) == -1) {
-          toggleOptions(false);
-        }
-      });
     });
 
 
@@ -170,18 +130,12 @@
     /*  Listens for when the Youtube library is properly loaded
     ------------------------------------------------------------------------------------------*/
     function onYouTubeIframeAPIReady() {
-      if ($.cookie('leftBarIsOpened') != null) {
-        toggleLeftBar($.cookie('leftBarIsOpened') == 'true', 0);
-        toggleOptions($.cookie('optionsIsOpened') == 'true', 0);
-        togglePlayer($.cookie('playerIsEnlarged') == 'true', 0);
-        setFilterTxt($.cookie('filters'));
-        setPlaylist($.cookie('playlistFilter').replace('/', ' '));
-      }
-      appendVids(null, function() {
+      appendVids(filters, function() {
+        $('#playlist > a.vidSelection > div').first().addClass('selected');
         player = new YT.Player('YTplayer101', {
           height: '315',
           width: '560',
-          videoId: $.cookie('selectedCode') != null ? $.cookie('selectedCode') : $('#playlist > a.vidSelection').eq(0).attr('name'),
+          videoId: $('#playlist > a.vidSelection').eq(0).attr('name'),
           events: {
             'onReady': onPlayerReady,
             'onStateChange': onPlayerStateChange
@@ -194,27 +148,11 @@
     /*  Listens for when the player is ready
     ------------------------------------------------------------------------------------------*/
     function onPlayerReady(event) {
-
       if (startVidOnLoad) {
         event.target.playVideo();
       }
       //  Since only applies first time, set the rest to be true
       startVidOnLoad = true;
-      
-      if ($.cookie('selectedCode') != null) {
-        nextVideo($.cookie('selectedCode'), $.cookie('playerTime'));
-        switch (parseInt($.cookie('playerState'))) {
-          case 1:
-            event.target.playVideo();
-            break;
-          case 2:
-            event.target.pauseVideo();
-            break;
-        }
-      } else {
-        $('#playlist > a.vidSelection > div').first().addClass('selected');
-      }
-
       winResize();
     }
 
@@ -243,7 +181,8 @@
     /*  while setting the selected vid bar (in playlist) with the code with class 'selected',
     /*  as well as scrolling selected vid bar (in playlist) to top
     ------------------------------------------------------------------------------------------*/
-    function nextVideo(code, startSecond, callback) {
+    function nextVideo(code) {
+      alert(code);
       // If didn't pass in parameter, set currently selected's next video's code as code
       if (code == undefined) {
         code = $('#playlist > a.vidSelection > div.selected').parent().next().attr('name');
@@ -254,24 +193,10 @@
 
       //  Set new current and switch to next vid
       current = code;
-      player.loadVideoById(code, startSecond != null ? startSecond : 0, "large");
+      player.loadVideoById(current, 0, "large");
 
       //  Scroll to proper location in playlist
-      $('#playlist').animate({ scrollTop: ($('#playlist').scrollTop() + $('a[name="' + current + '"]').offset().top - $('#playlist').offset().top) }, 1000, callback);
-    }
-
-    /*  Store information on cookie when page unloads.  For resume on return to page
-    ------------------------------------------------------------------------------------------*/
-    function setForReturn() {
-      $.cookie('playerIsEnlarged', playerIsEnlarged(), { expires: 1, path: '/' });
-      $.cookie('playerTime', player.getCurrentTime(), { expires: 1, path: '/' });
-      $.cookie('leftBarIsOpened', leftBarIsOpened(), { expires: 1, path: '/' });
-      $.cookie('optionsIsOpened', optionsIsOpened(), { expires: 1, path: '/' });
-      $.cookie('startIndex', startIndex, { expires: 1, path: '/' });
-      $.cookie('filters', filters, { expires: 1, path: '/' });
-      $.cookie('playlistFilter', playlistFilter, { expires: 1, path: '/' });
-      $.cookie('selectedCode', $('div.thumbnailBlock.selected').parent().attr('name'), { expires: 1, path: '/' });
-      $.cookie('playerState', player.getPlayerState(), { expires: 1, path: '/' });
+      $('#playlist').animate({ scrollTop: ($('#playlist').scrollTop() + $('a[name="' + current + '"]').offset().top - $('#playlist').offset().top) }, 1000);
     }
 
 
@@ -292,7 +217,6 @@
           $('#YTplayer101').addClass('YTiframeEnlarge');
           $('#player > .YTlightSwitch').addClass('YTpoppedColor');
           $('#player > .YTpop').addClass('YTpoppedColor');
-          $('#player > .YTdrag').addClass('YTpoppedColor');
           winResize();
           $('#player').fadeIn(speed);
         });
@@ -306,7 +230,6 @@
           $('#YTplayer101').removeClass('YTiframeEnlarge');
           $('#player > .YTlightSwitch').removeClass('YTpoppedColor');
           $('#player > .YTpop').removeClass('YTpoppedColor');
-          $('#player > .YTdrag').removeClass('YTpoppedColor');
           winResize();
           $('#player').slideDown(speed);
         });
@@ -339,7 +262,7 @@
 
     /*  return if options tab is open
     ------------------------------------------------------------------------------------------*/
-    function optionsIsOpened() {
+    function optionsIsOpen() {
       return $('#leftBar div.options').css('right').replace('px', '') != 0;
     }
 
@@ -355,9 +278,9 @@
       }
     }
 
-    function setFilterTxt(string) {
-      $('.options input.searchText').val(string);
+    function optionsFilterList(string) {
       filters = string.trim().replace(/[^a-z0-9\s]/gi, '').replace(/ /g, '/');
+      resetPlaylist();
     }
 
     /*  initial populating of playlistSelection
@@ -381,8 +304,8 @@
         $('#leftBar .options .selectPlaylist').click(function(event) {
           event.preventDefault();
           setPlaylist($(this).text());
-          resetPlaylist();
         });
+        if (callback !== undefined) callback();
       });
     }
 
@@ -399,6 +322,8 @@
           $(this).removeClass('selected');
         }
       });
+      startIndex = 1;
+      resetPlaylist();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////// 
@@ -444,7 +369,6 @@
     ------------------------------------------------------------------------------------------*/
     function resetPlaylist(filter) {
       $('.vidSelection').remove();
-      startIndex = 1;
       appendVids(filter, function() {
         nextVideo($('#playlist > a.vidSelection').eq(0).attr('name'));
       });
@@ -474,47 +398,27 @@
         var json = data;
 
         //  Add list of videos to playlist[] and add to actual playlist as well
-        // alert('hi' + json.feed.entry);
-        if (json.feed.entry != undefined) {
-          var count = json.feed.entry.length;
-          $.each(json.feed.entry, function(key, val) {
-            //playlist.push(val.media$group.yt$videoid.$t);
-            $('#playlist > a:last').before(
-              '<a href="#" class="vidSelection" name="' + val.media$group.yt$videoid.$t + '" key="' + startIndex++ + '">' + 
-                '<div class="thumbnailBlock">' + 
-                  '<img src="' + val.media$group.media$thumbnail[1].url + '" alt="' + val.media$group.media$title.$t + '" />' + 
-                  '<p class="title">' + val.media$group.media$title.$t + '</p>' + 
-                  '<p class="smallDetails"><b>Views:</b> ' + val.yt$statistics.viewCount + ' |  <b>Duration:</b> ' + getTime(val.media$group.yt$duration.seconds) + '</p>' + 
-                  '<div style="clear: both;"></div>' + 
-                '</div>' + 
-              '</a>'
-            );
-            if (!--count) {
-              if ($.cookie('startIndex') != null && startIndex < parseInt($.cookie('startIndex'))) {
-                appendVids(null, callback);
-              } else {
-                $('#playlist > a.vidSelection').click(function(e) {
-                  e.preventDefault();
-                  nextVideo($(this).attr('name'));
-                });
-                $(this).scrollTop(scrolledPos);
-                callback();
-              }
-            }
-          });
-        } else {
-          if ($.cookie('startIndex') != null && startIndex < parseInt($.cookie('startIndex'))) {
-                appendVids(null, callback);
-              } else {
-                $('#playlist > a.vidSelection').click(function(e) {
-                  e.preventDefault();
-                  nextVideo($(this).attr('name'));
-                });
-                $(this).scrollTop(scrolledPos);
-                callback();
-              }
-        }
+        $.each(json.feed.entry, function(key, val) {
+          //playlist.push(val.media$group.yt$videoid.$t);
+          $('#playlist > a:last').before(
+            '<a href="#" class="vidSelection" name="' + val.media$group.yt$videoid.$t + '" key="' + startIndex++ + '">' + 
+              '<div class="thumbnailBlock">' + 
+                '<img src="' + val.media$group.media$thumbnail[1].url + '" alt="' + val.media$group.media$title.$t + '" />' + 
+                '<p class="title">' + val.media$group.media$title.$t + '</p>' + 
+                '<p class="smallDetails"><b>Views:</b> ' + val.yt$statistics.viewCount + ' |  <b>Duration:</b> ' + getTime(val.media$group.yt$duration.seconds) + '</p>' + 
+                '<div style="clear: both;"></div>' + 
+              '</div>' + 
+            '</a>'
+          );
+        });
+        //  After adding in all new vids, set playlist
+        $('#its > a.vidSelection').click(function(e) {
+          e.preventDefault();
+          nextVideo($(this).attr('name'));
+        });
+        if (callback != null) callback();
       });
+      $(this).scrollTop(scrolledPos);
     }
 
     /*  Load overlay to fade in, covering everything other than things in #leftBar,
@@ -551,7 +455,7 @@
     ////////////////////////////////////////////////////////////////////////////////////////////
     function winResize() {
       // Set leftbar height
-      $('#leftBar').height($(this).height() - $('header').height()).css('display', 'block');;
+      $('#leftBar').height($(this).height() - $('header').height());
 
       // Set playlist height according to whether player is popped or not
       if (!$('#player').hasClass('YTmovePlayer')) {

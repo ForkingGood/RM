@@ -1,0 +1,96 @@
+.btnUpload.selected {
+	background-color: #CC0000;
+}
+#upload{
+	font-family: SlicedAB;
+	display: none;
+	background-color: #0c0c0c;
+	border: 2px solid #CC0000;
+	width: 400px;
+	position: fixed;
+	top: 41px;
+	right: 170px;
+	z-index: 999;
+	padding: 1px 10px 10px 10px;
+	color: gray;
+}
+#upload input[type="text"], textarea {
+	font-size: 14pt;
+	padding: 3px 7px;
+	width: 95%;
+	border-radius: 6px;
+	background-color: black;
+	color: white;
+	border-color: gray;
+}
+#upload textarea {
+	height: 80px;
+}
+#upload input[type='file'] {
+	width: 200px;
+}
+#upload select {
+	font-size: 12pt;
+	padding: 2px;
+}
+#upload b {
+	text-transform: uppercase;
+	font-size: 15pt;
+	letter-spacing: 2px;
+}
+#upload .time {
+	width: 30px !important;
+	border-radius: 6px !important;
+	padding: 3px !important;
+}
+#upload table {
+	margin-left: 70px;
+}
+#upload table td {
+	text-align: center;
+}
+#upload .btnSendUpload {
+	display: block;
+	border: 2px outset red;
+	width: 99%;
+	background-color: red;
+	padding: 10px;
+	color: white;
+	text-decoration: none;
+	text-align: center;
+	border-radius: 6px;
+	font-size: 23pt;
+	font-weight: 500;
+	letter-spacing: 3px;
+}
+#upload .btnSendUpload:hover {
+	color: white;
+}
+#upload .uploadOverlay, .uploadLoading {
+	display: none;
+	position: absolute; 
+	top:0; 
+	left:0; 
+	width: 100%; 
+	height: 100%;
+}
+#upload .uploadOverlay {
+	background-color: black; 
+	opacity: 0.7;
+}
+#upload .uploadLoading .text {
+	position: absolute; 
+	top: 29px; 
+	width: 100%; 
+	right: 0px; 
+	text-align: center;
+}
+#upload .uploadLoading h1 {
+	color: #029407;
+	margin: 0;
+}
+#upload .uploadLoading img {
+	position: absolute; 
+	bottom: 50px; 
+	left: 150px;
+}

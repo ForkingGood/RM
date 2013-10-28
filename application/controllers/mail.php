@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Welcome extends CI_Controller {
+class Mail extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -19,19 +19,7 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->view('template/oHead');
-		//	Add headers here
-		$this->load->view('template/cHead_oBody');
-		$this->load->view('template/dHeader');
-		// Contents
-		$this->load->view('template/dPlaylist');
-		$this->load->view('template/dSubmit');
-		if (!isset($_COOKIE['firstTime'])) {
-			//$this->load->view('template/dIntro');
-		}
-		setcookie('firstTime', date("Y-m-d H:i:s"), time() + 7200);
-		//	Add content here
-		$this->load->view('template/cBody');
+		$this->load->view('mail/vpb_email_sender', $_POST);
 	}
 }
 
