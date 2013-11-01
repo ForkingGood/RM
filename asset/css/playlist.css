@@ -6,7 +6,7 @@
   width: 306px;
   margin-top: 42px;
   z-index: 999;
-  display: block;
+  display: none;
 }
 
 #player {

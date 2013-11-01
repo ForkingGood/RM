@@ -551,7 +551,7 @@
     ////////////////////////////////////////////////////////////////////////////////////////////
     function winResize() {
       // Set leftbar height
-      $('#leftBar').height($(this).height() - $('header').height()).css('display', 'block');;
+      $('#leftBar').height($(this).height() - $('header').height()).css('display', 'block');
 
       // Set playlist height according to whether player is popped or not
       if (!$('#player').hasClass('YTmovePlayer')) {
