@@ -1,3 +1,28 @@
+<style>
+article div.announcements {
+	border: 1px solid gray;
+	padding: 5px;
+	background-color: black;
+	margin: 0 0 10px 0;
+
+}
+	article div.announcements h2 {
+		font-family: SlicedAB;
+		float: left;
+	}
+	article div.announcements p {
+		font-size: 10pt;
+		clear: both;
+	}
+	article div.announcements div.info {
+		margin: 3px 5px;
+		color: gray;
+		letter-spacing: 2px;
+		font-size: 12pt;
+		float: right;
+	}
+</style>
+
 <article>
 	<h1>Announcements</h1>
 	<div class="announcements">

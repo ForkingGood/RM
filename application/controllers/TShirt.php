@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Home extends CI_Controller {
+class TShirt extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -19,20 +19,20 @@ class Home extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->model('tshirt_model');
-		$data['query'] = $this->tshirt_model->get_all();
-
 		ob_start();
 		$mainLayout = file_get_contents('http://localhost:1234/RM/Template/');
 		echo $mainLayout;
 
+		$this->load->model('tshirt_model');
+		$data['query'] = $this->tshirt_model->get_all();
+
 		$this->load->helper('url');
 
-		$this->load->view('tshirt/slideShow', $data);
-		$this->load->view('tshirt/joinUs');
-		$this->load->view('announcement/list');
+		$this->load->view('home/tshirt');
+		$this->load->view('home/announcements');
+	}
+
+	public function add() {
+
 	}
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
