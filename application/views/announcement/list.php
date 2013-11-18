@@ -12,16 +12,19 @@ article div.announcements {
 	article div.announcements h2 {
 		font-family: SlicedAB;
 		float: left;
+		font-size: 20pt;
+		color: #c40000;
 	}
 	article div.announcements p {
 		font-size: 10pt;
 		clear: both;
+
 	}
 	article div.announcements div.info {
 		margin: 3px 5px;
 		color: gray;
 		letter-spacing: 2px;
-		font-size: 12pt;
+		font-size: 9pt;
 		float: right;
 	}
 		article div.announcements div.info i {
@@ -31,6 +34,7 @@ article div.announcements {
 
 <article>
 	<h1>Announcements</h1>
+	<div class="announcementScroll">
 	<?php
 		foreach ($query as $row) {
 			echo "<div class='announcements'>".
@@ -41,6 +45,13 @@ article div.announcements {
 
 		}
 	?>
-
+	</div>
 	<div class="bg"></div>
 </article>
+
+<script>
+	$('div.announcementScroll').slimscroll({ 
+		height: '316px',
+		color: '#840000'
+	});
+</script>

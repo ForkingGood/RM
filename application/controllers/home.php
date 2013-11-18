@@ -23,7 +23,7 @@ class Home extends CI_Controller {
 		$tshirt_Data['query'] = $this->tshirt_model->get_all(array('showTShirt' => true));
 
 		$this->load->model('announcement_model');
-		$announcement_Data['query'] = $this->announcement_model->get_all(null, 4);
+		$announcement_Data['query'] = $this->announcement_model->get_all(null);
 
 
 		$this->load->helper('url');

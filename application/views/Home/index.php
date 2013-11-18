@@ -21,6 +21,14 @@
 <br clear="all">
 <br />
 
+
+<article>
+	<h1>Recent Videos</h1>
+	<?=$recentVideo?>
+	<div class="bg"></div>
+</article>
+<br />
+
 <style>
 	article.submission article {
 		cursor: pointer;
@@ -76,14 +84,9 @@
 <br />
 
 
-<article>
-	<h1>Recent Videos</h1>
-	<?=$recentVideo?>
-	<div class="bg"></div>
-</article>
-<br />
 
 <article class='tshirt halfColumn'>
+	<h1>T-Shirt Frenzy!</h1>
 	<?=$tshirt?>
 	<div class='bg'></div>
 </article>

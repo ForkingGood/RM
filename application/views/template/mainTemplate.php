@@ -46,7 +46,7 @@
 				<a href="https://www.facebook.com/RedmercyLoL" target="_blank"><div class="facebook"></div><p>Facebook</p></a>
 				<a href="https://plus.google.com/108349012594556038005/posts" target="_blank"><div class="googlePlus"></div><p>Google+</p></a>
 				<a href="http://www.youtube.com/user/Redmercy" target="_blank"><div class="youtube"></div><p>Youtube</p></a>
-				<a href="http://www.youtube.com/user/Redmercy" target="_blank"><div class="twitch"><img src="<?=base_url()?>asset/img/twitch_icon.png" style="width: 100%; height: 100%;" /></div><p>Twitch</p></a>
+				<a href="http://www.twitch.tv/redmercylol" target="_blank"><div class="twitch"><img src="<?=base_url()?>asset/img/twitch_icon.png" style="width: 100%; height: 100%;" /></div><p>Twitch</p></a>
 			</div>
 			<?=$menu?>
 		</div>
@@ -90,8 +90,21 @@
 					</div>
 				</div>
 				<div class="halfColumn endColumn">
-					<h1>Mission</h1>
-					<p>Some kind of mission statement if you really dont' have anything to put in this little spot, because it makes you sound determined to deliver what you promise your viewers you would deliver, and to the best! Thank you!
+					<!-- <h1>Mission</h1> -->
+					<!-- <p>Some kind of mission statement if you really dont' have anything to put in this little spot, because it makes you sound determined to deliver what you promise your viewers you would deliver, and to the best! Thank you! -->
+
+					<!-- <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+						<input type="hidden" name="cmd" value="_donations">
+						<input type="hidden" name="business" value="dmitrygaranin1991@yahoo.ca">
+						<input type="hidden" name="lc" value="CA">
+						<input type="hidden" name="item_name" value="Redmercy">
+						<input type="hidden" name="no_note" value="0">
+						<input type="hidden" name="currency_code" value="USD">
+						<input type="hidden" name="bn" value="PP-DonationsBF:btn_donateCC_LG.gif:NonHostedGuest">
+						<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+						<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+					</form> -->
+
 				</div>
 			</div>
 			<br clear='all'>

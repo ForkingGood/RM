@@ -121,6 +121,6 @@ jQuery(document).ready(function(){
     });
 
     $('div.amazingslider-watermark-0').remove();
-    $('.amazingslider-slider-0').css('display', 'none');
-    setTimeout(function() { $('.amazingslider-slider-0').slideDown(2000); }, 2000);
+    // $('.amazingslider-slider-0').css('display', 'none');
+    // setTimeout(function() { $('.amazingslider-slider-0').slideDown(2000); }, 000);
 });
