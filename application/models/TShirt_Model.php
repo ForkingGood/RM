@@ -6,19 +6,24 @@ class TShirt_model extends CI_Model{
 		parent::__construct();
 	}
 
-	function get_all()
+	function get_all($where = array(), $limit = null, $offset = null)
 	{
 		$this->load->database();
-		$this->db->order_by('dateCreated asc');
-		$query = $this->db->get('tshirt');
+		$this->db->order_by('dateCreated desc');
+		$query = $this->db->get_where('tshirt', $where, $limit, $offset);
 		return $query->result();
+	}
+	function get($id) {
+		$this->load->database();
+		$query = $this->db->get_where('tshirt', array('id' => $id));
+		return $query->result()[0];
 	}
 
 	function insert($object)
 	{
 		$this->load->database();
 		$this->db->insert('tshirt', $object); 
-
+		return $this->db->insert_id();
 	}
 
 	function edit($id, $object)
@@ -31,6 +36,7 @@ class TShirt_model extends CI_Model{
 	function delete($id)
 	{
 		$this->load->database();
+		unlink('/asset/uploads/T-shirts/'.$this->get($id)->imgPath);
 		$this->db->delete('tshirt', array('id' => $id));
 	}
 }

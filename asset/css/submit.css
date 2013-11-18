@@ -9,7 +9,7 @@
 	width: 400px;
 	position: fixed;
 	top: 41px;
-	right: 170px;
+	right: 50px;
 	z-index: 999;
 	padding: 1px 10px 10px 10px;
 	color: gray;
@@ -93,4 +93,45 @@
 	position: absolute; 
 	bottom: 50px; 
 	left: 150px;
+}
+#upload nav {
+	text-align: center;
+}
+#upload nav a {
+	position: relative;
+	padding: 4px 9px 4.5px 9px;
+	background-color: #08088A;
+	color: white;
+	margin: -10px 0px 0 15px;
+	font-size: 15pt;
+	text-decoration: none;
+}
+#upload nav a:before {
+	position: absolute;
+	content:' ';
+	top: 0;
+	left: -24px;
+	width: 0;
+	height: 0;
+	border-top: 23px solid #08088A;
+	border-left: 25px solid transparent;
+}
+#upload nav a:after {
+	position: absolute;
+	content:' ';
+	top: 0;
+	right: -24px;
+	width: 0;
+	height: 0;
+	border-top: 23px solid #08088A;
+	border-right: 25px solid transparent;
+}
+#upload nav a.selected {
+	z-index: 10;
+	background-color: red;
+	text-decoration: underline;
+}
+#upload nav a.selected:before, #upload nav a.selected:after {
+	z-index: 10;
+	border-top-color: red;
 }

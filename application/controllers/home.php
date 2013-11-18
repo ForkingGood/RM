@@ -20,17 +20,30 @@ class Home extends CI_Controller {
 	public function index()
 	{
 		$this->load->model('tshirt_model');
-		$data['query'] = $this->tshirt_model->get_all();
+		$tshirt_Data['query'] = $this->tshirt_model->get_all(array('showTShirt' => true));
 
-		ob_start();
-		$mainLayout = file_get_contents('http://localhost:1234/RM/Template/');
-		echo $mainLayout;
+		$this->load->model('announcement_model');
+		$announcement_Data['query'] = $this->announcement_model->get_all(null, 4);
+
 
 		$this->load->helper('url');
 
-		$this->load->view('tshirt/slideShow', $data);
-		$this->load->view('tshirt/joinUs');
-		$this->load->view('announcement/list');
+		$home['tshirt'] = $this->load->view('tshirt/autoGrid', $tshirt_Data, true);
+		$home['announcement'] = $this->load->view('announcement/list', $announcement_Data, true);
+		$home['recentVideo'] = $this->load->view('youtube/recentVideo', null, true);
+		// $template['content'] = $this->load->view('tshirt/joinUs', null, true);
+		$template['content'] = $this->load->view('home/index', $home, true);
+		$template['content'] .= $this->load->view('template/Submit', null, true);
+		$template['content'] .= $this->load->view('template/Playlist', null, true);
+
+		// MASTER PAGE
+		$session_data = $this->session->userdata('logged_in');
+		$template['login'] = $session_data;
+		$template['menu'] = $this->load->view('template/menuPublic', null, true);
+		if (!isset($_COOKIE['firstTime'])) {
+			$template['content'] .= $this->load->view('template/Intro', null, true);			
+		}
+		$this->load->view('template/mainTemplate', $template);
 	}
 }
 

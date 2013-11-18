@@ -19,19 +19,33 @@ class Template extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->helper('url');
+		$session_data = $this->session->userdata('logged_in');
+		$data['username'] = $session_data['username'];
+		$data['role'] = $session_data['role'];
 
 		$this->load->view('template/oHead');							//	Open Head tag
 		//	Add headers here
 		$this->load->view('template/Includes');							//	Set includes libraries
 		$this->load->view('template/cHead_oBody');						//	Close Head tag, and Open Body tag
-		$this->load->view('template/TopBanner');						//	Set top banner
+		$this->load->view('template/TopBanner', $data);						//	Set top banner
 		$this->load->view('template/Playlist');							//	Set playlist
 		$this->load->view('template/Submit');							//	Set submit form
-		// if (!isset($_COOKIE['firstTime'])) {
-			$this->load->view('template/Intro');						//	Set intro instruction displays, which only show if 'firstTime' cookie is not set
-		// }
-		// setcookie('firstTime', date("Y-m-d H:i:s"), time() + 7200);
+		$this->load->view('template/Intro');							//	Set intro instruction displays, which only show if 'firstTime' cookie is not set
+		//	Add content here
+		$this->load->view('template/cBody');							//	Close Body tag
+	}
+
+	public function admin()
+	{
+
+		$session_data = $this->session->userdata('logged_in');
+		$data['username'] = $session_data['username'];
+		$this->load->view('template/oHead');							//	Open Head tag
+		//	Add headers here
+		$this->load->view('template/Includes');							//	Set includes libraries
+		$this->load->view('template/cHead_oBody');						//	Close Head tag, and Open Body tag
+		$this->load->view('template/AdminTopBanner', $data);			//	Set top banner
+
 		//	Add content here
 		$this->load->view('template/cBody');							//	Close Body tag
 	}

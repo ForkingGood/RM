@@ -31,8 +31,8 @@
 
 	#showIntro .instructions.step3 {
 		width: 300px;
-		right: 10px;
-		top: 0px;
+		right: -17px;
+		top: 33px;
 	}
 	#showIntro .instructions.step3 img {
 		margin: 0 0 0 160px;

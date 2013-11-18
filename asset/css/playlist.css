@@ -159,7 +159,7 @@
     border: 1px solid #740000;
     position: absolute;
     top: 44px;
-    right: 0;
+    right: 1px;
     z-index: -1;
     padding: 10px;
     display: none;
@@ -168,10 +168,10 @@
       font-family: arial;
       text-transform: uppercase;
       position: absolute;
-      right: -55px;
+      right: -59px;
       letter-spacing: 1px;
       font-size: 13pt;
-      top: 20px;
+      top: 23px;
       transform: rotate(90deg);
       -ms-transform: rotate(90deg); /* IE 9 */
       -webkit-transform: rotate(90deg); /* Safari and Chrome */

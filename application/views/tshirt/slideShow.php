@@ -56,11 +56,13 @@
 	<ul id="tShirtSlider">
 <?php
 	foreach ($query as $row) {
-		echo "<li>".
-			 	"<img src='".base_url()."asset/img/T-shirts/".$row->imgPath."' alt='T-shirt Pictures from fan \'".$row->summonerName."\'' />".
-			 	"<h2>".$row->summonerName."</h2>".
-			 	"<p>".$row->description."</p>".
-			 "</li>";
+		// if ($row->showTShirt) {
+			echo "<li>".
+				 	"<img src='".base_url()."asset/uploads/T-shirts/".$row->imgPath."' alt='T-shirt Pictures from fan \"".$row->summonerName."\"' />".
+				 	"<h2>".$row->summonerName."</h2>".
+				 	"<p>".$row->description."</p>".
+				 "</li>";
+		// }
 	}
 ?>
 		</ul>

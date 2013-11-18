@@ -44,20 +44,6 @@
       //  Set classes and initial function calling
       ////////////////////////////////////////////////////////////////////////////////////////////
 
-      // Set settings according to cookies (or default)
-      // if ($.cookie('leftBarIsOpened') != null) {
-      //   toggleLeftBar($.cookie('leftBarIsOpened') == 'true', 0);
-      //   toggleOptions($.cookie('optionsIsOpened') == 'true', 0);
-      //   togglePlayer($.cookie('playerIsEnlarged') == 'true', 0);
-        //  onYouTubeIframeAPIReady:
-        //      set video code
-        //  appendVid:
-        //      populate previous amount of videos
-        //  onPlayerReady:
-        //      set: video, seekTo
-
-      // }
-
 
       // Tracking first entry as current, and show as selected
       current = $('#playlist > a.vidSelection').first().attr('name');
@@ -113,17 +99,6 @@
         e.preventDefault();
         setFilterTxt($('.options .searchText').val());
         resetPlaylist();
-      // alert(
-      //   "playerIsEnlarged : '" + $.cookie('playerIsEnlarged') + "'\n" +
-      //   "playerTime       : '" + $.cookie('playerTime')       + "'\n" +
-      //   "leftBarIsOpened  : '" + $.cookie('leftBarIsOpened')  + "'\n" +
-      //   "optionsIsOpened  : '" + $.cookie('optionsIsOpened')  + "'\n" +
-      //   "playlistFilter   : '" + $.cookie('playlistFilter')   + "'\n" +
-      //   "filters          : '" + $.cookie('filters')          + "'\n" +
-      //   "selectedCode     : '" + $.cookie('selectedCode')     + "'\n" +
-      //   "playerState      : '" + $.cookie('playerState')      + "'\n" +
-      //   "startIndex       : '" + $.cookie('startIndex')       + "'\n"
-      //   );
       });
 
       $(".options .searchText").keyup(function(event){
@@ -136,18 +111,6 @@
       // Listen for browser resizing
       $(window).resize(winResize);
 
-      // store info when user navigates away from page for page layout resume
-      // alert(
-      //   "playerIsEnlarged : '" + $.cookie('playerIsEnlarged') + "'\n" +
-      //   "playerTime       : '" + $.cookie('playerTime')       + "'\n" +
-      //   "leftBarIsOpened  : '" + $.cookie('leftBarIsOpened')  + "'\n" +
-      //   "optionsIsOpened  : '" + $.cookie('optionsIsOpened')  + "'\n" +
-      //   "playlistFilter   : '" + $.cookie('playlistFilter')   + "'\n" +
-      //   "filters          : '" + $.cookie('filters')          + "'\n" +
-      //   "selectedCode     : '" + $.cookie('selectedCode')     + "'\n" +
-      //   "playerState      : '" + $.cookie('playerState')      + "'\n" +
-      //   "startIndex       : '" + $.cookie('startIndex')       + "'\n"
-      //   );
       $( window ).on('unload', setForReturn); 
       $( window ).click(function() {
         if ($(event.target).parents().index($('#leftBar')) == -1 && $(event.target).parents().index($('#showIntro')) == -1) {
@@ -257,7 +220,9 @@
       player.loadVideoById(code, startSecond != null ? startSecond : 0, "large");
 
       //  Scroll to proper location in playlist
-      $('#playlist').animate({ scrollTop: ($('#playlist').scrollTop() + $('a[name="' + current + '"]').offset().top - $('#playlist').offset().top) }, 1000, callback);
+      // alert($('a[name="' + current + '"]').offset().top);
+      $('#playlist').animate({ scrollTop: ($('#playlist').scrollTop() + $('a.vidSelection[name="' + current + '"]').offset().top - $('#playlist').offset().top) }, 1000, callback);
+      // $('#playlist').animate({ scrollTop: ($('#playlist').scrollTop() + $('a[name="' + current + '"]').offset().top - $('#playlist').offset().top) }, 1000, callback);
     }
 
     /*  Store information on cookie when page unloads.  For resume on return to page

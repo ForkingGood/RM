@@ -1,11 +1,14 @@
 <style>
 article div.announcements {
-	border: 1px solid gray;
+	border: 2px dotted #840000;
 	padding: 5px;
 	background-color: black;
 	margin: 0 0 10px 0;
-
 }
+	article div.announcements:hover {
+		border-style: solid;
+		box-shadow: 0 0 40px #510000;
+	}
 	article div.announcements h2 {
 		font-family: SlicedAB;
 		float: left;
@@ -21,30 +24,23 @@ article div.announcements {
 		font-size: 12pt;
 		float: right;
 	}
+		article div.announcements div.info i {
+			font-size: 9pt;
+		}
 </style>
 
 <article>
 	<h1>Announcements</h1>
-	<div class="announcements">
-		<h2>Some Heading</h2>
-		<div class="info">
-			Dec 2, 2013 | 2:34pm
-		</div>
-		<p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.</p>
-	</div>
-	<div class="announcements">
-		<h2>Some Heading</h2>
-		<div class="info">
-			Dec 2, 2013 | 2:34pm
-		</div>
-		<p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.</p>
-	</div>
-	<div class="announcements">
-		<h2>Some Heading</h2>
-		<div class="info">
-			Dec 2, 2013 | 2:34pm
-		</div>
-		<p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.</p>
-	</div>
+	<?php
+		foreach ($query as $row) {
+			echo "<div class='announcements'>".
+					"<h2>".$row->title."</h2>".
+					"<div class='info'>".date_format(new datetime($row->dateCreated), 'M d, Y').' <i>'.date_format(new datetime($row->dateCreated), 'h:ia')."</i></div>".
+					"<p>".$row->description."</p>".
+				 "</div>";
+
+		}
+	?>
+
 	<div class="bg"></div>
 </article>

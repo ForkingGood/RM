@@ -1,0 +1,108 @@
+/* MUST STYLES */
+
+.PopBox {
+	display: none;
+	z-index: 501;
+    position: fixed;
+}
+.PopBox_overlay {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: black;
+	opacity: 0.9;
+	z-index: 500;
+	display: none;
+}
+
+
+
+/* DEFAULT LOOK */
+
+.PopBox {
+	border: 2px solid #840000;
+	background-color: #181818;
+	color: white;
+	padding: 10px;
+	font-family: SlicedAB;
+	width: 950px;
+	box-shadow: 0px 0px 60px #840000;
+}
+.PopBox h1 {
+	color: white;
+	background-color: #03426A;
+	margin: 0;
+	padding: 4px 10px;
+	cursor: move;
+}
+.PopBox p {
+	padding: 10px;
+}
+.PopBox .x {
+	position: absolute;
+	right: 3px;
+	top: -2px;
+	background-color: #a60000;
+	color: white;
+	text-decoration: none;
+	padding: 2px 20px;
+}
+.PopBox .x:hover {
+	background-color: red;
+}
+.PopBox .button {
+	padding: 10px 0;
+	margin: 3px;
+	float: left;
+	width: 49%;
+	text-align: center;
+	background-color: #0570B4;
+	color: white;
+	text-decoration: none;
+	border: 1px outset #0570B4;
+}
+
+/*	CUSTOM	*/
+.PopBox table {
+	width: 100%;
+}
+.PopBox table th {
+	text-align: left;
+	vertical-align: top;
+	font-size: 17pt;
+	width: 100px;
+}
+.PopBox table textarea {
+	width: 99%;
+	height: 150px;
+	background-color: #040404;
+	border-radius: 3px;
+	color: #8e8e8e;
+	padding: 3px;
+	border: 2px inset #040404;
+}
+.PopBox table input[type='text'] {
+	width: 99%;
+	background-color: #040404;
+	border-radius: 3px;
+	color: #8e8e8e;
+	padding: 3px;
+	border: 2px inset #040404;
+}
+.PopBox input[type='button'] {
+	padding: 5px 20px;
+	background-color: #840000;
+	color: white;
+	border: 1px outset #840000;
+}
+.PopBox .response {
+	padding: 10px;
+}
+.PopBox .response .info {
+	color: red;
+}
+.PopBox.confirmDelete {
+	text-align: center;
+}
